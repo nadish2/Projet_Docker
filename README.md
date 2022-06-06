@@ -144,11 +144,7 @@ On s’occupe ensuite du réglage réseau et l’adressage ip :
 -	le Client1 appartiendra au réseau « network1 »  d’adresse 172.18.0.0/24 et a pour adresse IP 172.18.0.3/24
 ![image](https://user-images.githubusercontent.com/56343178/172079308-0c1cf859-8c5f-4031-9f83-ec852672d98a.png)
 
- 
-On peut voir que le Client1 a bien reçu une adresse IP appartenant au réseau défini précédemment : 172.18.0.3
- 
 -	Le FireWall appartiendra au deux réseaux 172.17.0.0/24 et 172.18.0.0//24 et a donc les deux adresses IP suivantes : 172.0.17.2/24 et 172.0.18.2/24
-![image](https://user-images.githubusercontent.com/56343178/172082016-3406a4cb-7cea-4aa9-b62f-68c1f9273ac6.png)
 
 
 # III.	Test de la maquette
