@@ -18,26 +18,135 @@ Ces trois conteneurs seront tous liés entre eux. En effet, pour qu’un client 
 
 - Dockerfile Server
 ```
+#On utilise une image Debian
+FROM debian
+
+#Mise à jour avant de récupérer les paquets requis pour le serveur Web
+RUN apt update && apt upgrade -y
+
+#Pour éviter le bug concernant le choix de la timezone
+#RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y install tzdata
+
+#Installation des paquets requis pour le serveur web apache2
+RUN apt-get install -y -q git apache2
+
+#Le conteneur s'exécutera en se basant sur le service apache2
+ENTRYPOINT /usr/sbin/apache2ctl -D FOREGROUND
+
+#Ronommage du fichier de base d'apache2 index.html en index.html.old
+RUN mv /var/www/html/index.html /var/www/html/index.html.old
+
+#Récupération du répertoire Git contenant mon site Web correspondant à mon CV
+RUN git clone https://github.com/nadish2/CV_NadeeshaHATHARASINGHA.git
+
+#Copie des fichiers récupérés vers la racine de mon serveur web
+RUN cd CV_NadeeshaHATHARASINGHA && cp * /var/www/html/
+
 
 ```
 - Dockerfile Client
 ```
+#On utilise comme image de base  debian
+FROM debian
+
+#Mise à jour du conteneur avant de récupérer les paquets nécessaires
+RUN apt update && apt upgrade -y
+
+#Installation des paquets nslookup, iproute2, ping, wget et curl
+RUN apt install -y nano dnsutils iproute2 iputils-ping wget curl openssl
+
+#Commande à lancer
+CMD curl http://172.17.0.1:8080
+
+#Commande lancée à l'exécution du conteneur
+ENTRYPOINT /bin/bash
 
 ```
 
 - Dockerfile Firewall
 
 ```
+On utilise comme image de base debian
+FROM debian
+
+#On copie le contenu du répertoire courant soit le fichier fw.sh dans le répertoire /fw du conteneur
+COPY . /fw
+
+#On définit le répertoire de travail
+WORKDIR /fw
+
+#Mise à jour avant de récupérer les paquets requis pour le pare-feu
+RUN apt update && apt upgrade -y
+
+#Installation du paquet "iptables" requis pour la configuration du pare-feu
+RUN apt install -y iptables nano curl iproute2 sudo
+
+#On exécute le script fw.sh
+RUN chmod +x fw.sh
+
+#Lors de l'exécution de l'image, on ouvre un terminal bash
+ENTRYPOINT /bin/bash
 
 ```
 - Fichier fw.sh
 
 ```
+#!/bin/bash
+
+#On efface les configurations existantes
+iptables -F INPUT
+iptables -F OUTPUT
+iptables -F FORWARD
+
+#On autorise toute connexion entrante ou sortante par defau
+iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD ACCEPT
+
+#Interdit l' acces (http) depuis le Firewall
+iptables -A INPUT -p tcp --sport 8080 -j DROP
+iptables -A OUTPUT -p tcp --dport 8080 -j DROP
+
+#Interdit l'acces http pour le client1
+iptables -A FORWARD -i eth1@if19 -o eth0@if9 -s 172.18.0.3/24 -d 172.17.0.3/24 -p tcp --sport 8080 -j ACCEPT
+iptables -A FORWARD -o eth1@if19 -i eth0@if9 -d 172.18.0.3/24 -s 172.17.0.3/24 -p tcp --dport 8080 -j ACCEPT
 
 ```
 - Docker-Compose
 
-```
+```version: '3'
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: Server
+    volumes:
+      - ./server:/var/www/html/
+    ports:
+      - 8081:80
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: Client
+    depends_on:
+      - Server
+
+  firewall:
+    build:
+      context: ./firewall
+      dockerfile: Dockerfile
+    container_name: Firewall
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv4.ip_forward=1
+    command: >
+      bash -c "./fw.sh"
+    depends_on:
+      - Client
 
 ```
 
