@@ -179,5 +179,4 @@ Puis on fait « docker-compose build »:
  ![image](https://user-images.githubusercontent.com/56343178/172083483-e638b432-7df9-421e-af6f-9242dc02b0d4.png)
 
 Et enfin « docker-compose up » :
- ![image](https://user-images.githubusercontent.com/56343178/172083491-7f017ac1-fba8-47f7-b006-e0fa61cf095f.png)
-
+![image](https://user-images.githubusercontent.com/56343178/172084271-9a693dcd-f0c2-4e60-81b6-7865dd04b3ff.png)
