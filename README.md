@@ -30,6 +30,11 @@ Ces trois conteneurs seront tous liés entre eux. En effet, pour qu’un client 
 ```
 
 ```
+- Fichier fw.sh
+
+```
+
+```
 - Docker-Compose
 
 ```
@@ -111,11 +116,6 @@ On vérifie maintenant que client a bien accès au site web avec la commande : �
 On passe maintenant à la configuration du Pare-feu. Pour cela tout comme pour le serveur, on crée une nouvelle image. On crée un dossier « firewall » et on y ajoute le Dockerfile Firewall vu précédemment qui installe d’une part le paquet « iptables » puis copie le script fw.sh (contenant les différentes règles à appliquer) dans le répertoire du container:
  
  ![image](https://user-images.githubusercontent.com/56343178/172079091-6b13c00c-699b-4401-aa1a-e1496fa7ab60.png)
-
- 
-### Fichier « fw.sh » :
-```
-```
 
 On construit ensuite l’image firewall :
  ![image](https://user-images.githubusercontent.com/56343178/172079195-45b694ab-f857-4a4f-b2ee-1bfa0917102b.png)
