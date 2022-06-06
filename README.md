@@ -267,8 +267,7 @@ Pour tester le Pare-feu, on teste donc la règle définie précédemment dans le
 Cependant, je n’ai pas réussi à appliquer cette règle sur le Client car je n’arrive pas à définir les deux  adresses IP du Firewall comme passerelle par défaut des containers Server et Client pour qu’il agisse comme un routeur. Donc j’ai testé la commande « curl » directement à partir du Firewall :
  ![image](https://user-images.githubusercontent.com/56343178/172082079-75ca3a21-0977-414a-babe-b52a337ced83.png)
 
-On active maintenant le pare feu en exécutant le fichier fw.sh contenant la règle puis on refait un curl après avoir ajouté le droit en exécution au fichier fw.sh:
-![image](https://user-images.githubusercontent.com/56343178/172083433-4ed9c022-5bbc-4382-a9f8-bc599d16edab.png)
+On active maintenant le pare feu en exécutant le fichier fw.sh contenant la règle puis on refait un curl:
 ![image](https://user-images.githubusercontent.com/56343178/172083887-985530b2-13e1-4c2c-b345-af139d9d8b33.png)
 On voit bien que l’accès est maintenant bloqué.
 
