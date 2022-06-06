@@ -66,7 +66,7 @@ ENTRYPOINT /bin/bash
 - Dockerfile Firewall
 
 ```
-On utilise comme image de base debian
+#On utilise comme image de base debian
 FROM debian
 
 #On copie le contenu du répertoire courant soit le fichier fw.sh dans le répertoire /fw du conteneur
@@ -114,7 +114,8 @@ iptables -A FORWARD -o eth1@if19 -i eth0@if9 -d 172.18.0.3/24 -s 172.17.0.3/24 -
 ```
 - Docker-Compose
 
-```version: '3'
+```
+version: '3'
 services:
   server:
     build:
