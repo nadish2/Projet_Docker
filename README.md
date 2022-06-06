@@ -81,7 +81,7 @@ RUN apt update && apt upgrade -y
 #Installation du paquet "iptables" requis pour la configuration du pare-feu
 RUN apt install -y iptables nano curl iproute2 sudo
 
-#On exécute le script fw.sh
+#On ajoute les droits en exécution au fichier fw.sh
 RUN chmod +x fw.sh
 
 #Lors de l'exécution de l'image, on ouvre un terminal bash
@@ -98,7 +98,7 @@ iptables -F INPUT
 iptables -F OUTPUT
 iptables -F FORWARD
 
-#On autorise toute connexion entrante ou sortante par defau
+#On autorise toute connexion entrante ou sortante par defaut
 iptables -P INPUT ACCEPT
 iptables -P OUTPUT ACCEPT
 iptables -P FORWARD ACCEPT
@@ -107,9 +107,9 @@ iptables -P FORWARD ACCEPT
 iptables -A INPUT -p tcp --sport 8080 -j DROP
 iptables -A OUTPUT -p tcp --dport 8080 -j DROP
 
-#Interdit l'acces http pour le client1
-iptables -A FORWARD -i eth1@if19 -o eth0@if9 -s 172.18.0.3/24 -d 172.17.0.3/24 -p tcp --sport 8080 -j ACCEPT
-iptables -A FORWARD -o eth1@if19 -i eth0@if9 -d 172.18.0.3/24 -s 172.17.0.3/24 -p tcp --dport 8080 -j ACCEPT
+#Interdit l'acces http au Client
+iptables -A FORWARD -i eth1@if19 -o eth0@if9 -s 172.18.0.3/24 -d 172.17.0.3/24 -p tcp --sport 8080 -j DROP
+iptables -A FORWARD -o eth1@if19 -i eth0@if9 -d 172.18.0.3/24 -s 172.17.0.3/24 -p tcp --dport 8080 -j DROP
 
 ```
 - Docker-Compose
@@ -125,7 +125,7 @@ services:
     volumes:
       - ./server:/var/www/html/
     ports:
-      - 8081:80
+      - 8080:80
 
   client:
     build:
@@ -217,7 +217,6 @@ Nous créons ensuite un container client utilisant cette nouvelle image « clien
  
 
 On vérifie maintenant que client a bien accès au site web avec la commande : « curl http://172.17.0.1:8080 »
-	Client :
  ![image](https://user-images.githubusercontent.com/56343178/172079067-ed0e0da3-6803-4087-b825-bcb7d8426cfd.png)
 
 -----------------
@@ -251,7 +250,7 @@ On s’occupe ensuite du réglage réseau et l’adressage ip :
 -	le Server appartiendra au réseau par défaut « bridge » d’adresse 172.17.0.0/24 et a pour adresse IP 172.17.0.3/24
  ![image](https://user-images.githubusercontent.com/56343178/172079251-3d1c5ad1-412c-4263-a5a3-192f0e9c1c73.png)
 
--	le Client1 appartiendra au réseau « network1 »  d’adresse 172.18.0.0/24 et a pour adresse IP 172.18.0.3/24
+-	le Client appartiendra au réseau « network1 »  d’adresse 172.18.0.0/24 et a pour adresse IP 172.18.0.3/24
 ![image](https://user-images.githubusercontent.com/56343178/172079308-0c1cf859-8c5f-4031-9f83-ec852672d98a.png)
 
 -	Le FireWall appartiendra au deux réseaux 172.17.0.0/24 et 172.18.0.0//24 et a donc les deux adresses IP suivantes : 172.0.17.2/24 et 172.0.18.2/24
@@ -260,11 +259,11 @@ On s’occupe ensuite du réglage réseau et l’adressage ip :
 # III.	Test de la maquette
 
 On vérifie d’abord que le Client a bien accès au serveur Web avant l’activation du pare-feu :
-	Client :
  ![image](https://user-images.githubusercontent.com/56343178/172082040-d94d511e-cd58-49b1-b77d-4d5c2902659c.png)
 
 Pour tester le Pare-feu, on teste donc la règle définie précédemment dans le fichier fw.sh qui permet d’interdire l’accès au site au Client en activant le pare-feu puis en réessayant de faire un curl avec le Client. 
-Cependant, je n’ai pas réussi à appliquer cette règle sur le Client car je n’arrive pas à définir les deux  adresses IP du Firewall comme passerelle par défaut des containers Server et Client pour qu’il agisse comme un routeur. Donc j’ai testé la commande « curl » directement à partir du Firewall :
+Cependant, je n’ai pas réussi à appliquer cette règle sur le Client car je n’arrive pas à définir les deux  adresses IP du Firewall comme passerelle par défaut des containers Server et Client pour qu’il agisse comme un routeur. 
+Donc j’ai testé la commande « curl » directement à partir du Firewall :
  ![image](https://user-images.githubusercontent.com/56343178/172082079-75ca3a21-0977-414a-babe-b52a337ced83.png)
 
 On active maintenant le pare feu en exécutant le fichier fw.sh contenant la règle puis on refait un curl:
