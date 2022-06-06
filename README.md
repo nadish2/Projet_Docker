@@ -161,27 +161,28 @@ Pour tester le Pare-feu, on teste donc la règle définie précédemment dans le
 Cependant, je n’ai pas réussi à appliquer cette règle sur le Client car je n’arrive pas à définir les deux  adresses IP du Firewall comme passerelle par défaut des containers Server et Client pour qu’il agisse comme un routeur. Donc j’ai testé la commande « curl » directement à partir du Firewall :
  ![image](https://user-images.githubusercontent.com/56343178/172082079-75ca3a21-0977-414a-babe-b52a337ced83.png)
 
-On active maintenant le pare feu en exécutant le fichier fw.sh contenant la règle puis on refait un curl :
+On active maintenant le pare feu en exécutant le fichier fw.sh contenant la règle puis on refait un curl après avoir ajouté le droit en exécution au fichier fw.sh:
+![image](https://user-images.githubusercontent.com/56343178/172083433-4ed9c022-5bbc-4382-a9f8-bc599d16edab.png)
  ![image](https://user-images.githubusercontent.com/56343178/172082094-71e0b24f-8df0-4d22-829a-29cb80fac3f4.png)
 
 On voit bien que l’accès est maintenant bloqué.
 
 
 
-
-
-
-
-
-
-IV.	Docker Compose
+# IV.	Docker Compose
 On commence par installer Docker Compose avec la commande :  
 « sudo curl -L https://github.com/docker/compose/releases/download/v2.0.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose »
- 
+ ![image](https://user-images.githubusercontent.com/56343178/172083461-1b48a848-908d-4b5a-8bb2-9d47a7070254.png)
+
 On modifie les droits en exécution avec la commande :  « sudo chmod +x /usr/local/bin/docker-compose »
+![image](https://user-images.githubusercontent.com/56343178/172083468-14d5cf45-2964-4ce8-aef7-ca4f0caa37ed.png)
+
  Puis on vérifie l’installation avec la commande « docker-compose –version »
- 
+ ![image](https://user-images.githubusercontent.com/56343178/172083478-daeb1b7b-e734-4f42-80ea-5284d0e685f8.png)
+
 Puis on fait « docker-compose build »:
- 
+ ![image](https://user-images.githubusercontent.com/56343178/172083483-e638b432-7df9-421e-af6f-9242dc02b0d4.png)
+
 Et enfin « docker-compose up » :
- 
+ ![image](https://user-images.githubusercontent.com/56343178/172083491-7f017ac1-fba8-47f7-b006-e0fa61cf095f.png)
+
