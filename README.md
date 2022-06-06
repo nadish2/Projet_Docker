@@ -44,8 +44,8 @@ Afin de réaliser ce projet, j’ai suivi les étapes suivantes :
 
 
 
-
-## I.	Création des 3 Dockerfile: Serveur Web / Client / Pare-feu
+-----------------
+# I.	Création des 3 Dockerfile: Serveur Web / Client / Pare-feu
 
 J’ai commencé par créer et configurer séparément les Dockerfile de trois conteneurs, tous de type debian: un conteneur qui tournera un serveur Web (Apache2), un conteneur qui fera office de Client et enfin un dernier qui jouera le rôle de pare-feu et limitera donc la communication entre ces containers selon certaines conditions. 
 
@@ -55,7 +55,7 @@ Notre machine hôte a l’adresse IP suivante :
 
 
 
-### 1.	Configuration Serveur Web (Apache2)
+## 1.	Configuration Serveur Web (Apache2)
 
 Pour le serveur Web , nous utiliserons le service Web Apache2. 
 On commence par créer notre répertoire « server » dans notre machine virtuelle Docker. Puis on y ajoute le Dockerfile serveur montré précédemment permettant d’afficher un premier site web, qui correspond ici à mon CV réalisé dans le module « Développement d’applications Web » de ce semestre et qui aura été importé à partir de mon github :
@@ -86,7 +86,7 @@ On ouvre maintenant un navigateur et on indique l'adresse IP de notre machine h�
 
  ![image](https://user-images.githubusercontent.com/56343178/172078872-a7f14bc0-4739-4cb4-9557-51b2ec98c7af.png)
 
-
+-----------------
 ## 2.	Configuration Client
 
 On commence par créer notre répertoire « client » dans notre machine virtuelle Docker , puis on y ajoute le Dockerfile Client vu précédemment qui permet de télécharger les outils nécessaires au Client pour communiquer avec  le Serveur et le Firewall et pouvoir  accéder au site Web.
@@ -101,18 +101,19 @@ Nous créons ensuite un container client utilisant cette nouvelle image « clien
 ![image](https://user-images.githubusercontent.com/56343178/172080436-2e581528-486c-4aad-b88a-bf5181c76854.png)
  
 
-On vérifie maintenant que le Client1 a bien accès au site web avec la commande : « curl http://172.17.0.1:8080 »
-	Client 1 :
+On vérifie maintenant que client a bien accès au site web avec la commande : « curl http://172.17.0.1:8080 »
+	Client :
  ![image](https://user-images.githubusercontent.com/56343178/172079067-ed0e0da3-6803-4087-b825-bcb7d8426cfd.png)
 
-3.	Configuration Pare-feu
+-----------------
+## 3.	Configuration Pare-feu
 
 On passe maintenant à la configuration du Pare-feu. Pour cela tout comme pour le serveur, on crée une nouvelle image. On crée un dossier « firewall » et on y ajoute le Dockerfile Firewall vu précédemment qui installe d’une part le paquet « iptables » puis copie le script fw.sh (contenant les différentes règles à appliquer) dans le répertoire du container:
  
  ![image](https://user-images.githubusercontent.com/56343178/172079091-6b13c00c-699b-4401-aa1a-e1496fa7ab60.png)
 
  
-## Fichier « fw.sh » :
+### Fichier « fw.sh » :
 ```
 ```
 
@@ -147,18 +148,22 @@ On s’occupe ensuite du réglage réseau et l’adressage ip :
 On peut voir que le Client1 a bien reçu une adresse IP appartenant au réseau défini précédemment : 172.18.0.3
  
 -	Le FireWall appartiendra au deux réseaux 172.17.0.0/24 et 172.18.0.0//24 et a donc les deux adresses IP suivantes : 172.0.17.2/24 et 172.0.18.2/24
+![image](https://user-images.githubusercontent.com/56343178/172082016-3406a4cb-7cea-4aa9-b62f-68c1f9273ac6.png)
 
 
-III.	Test de la maquette
+# III.	Test de la maquette
 
-On vérifie d’abord que le Client1 a bien accès au serveur Web avant l’activation du pare-feu :
-	Client1 :
- 
-Pour tester le Pare-feu, on teste donc la règle définie précédemment dans le fichier fw.sh qui permet d’interdire l’accès au site au Client1 en activant le pare-feu puis en réessayant de faire un curl avec le Client 1. 
-Cependant, je n’ai pas réussi à appliquer cette règle sur le Client1 car je n’arrive pas à définir les deux  adresses IP du Firewall comme passerelle par défaut des containers Server et Client1 pour qu’il agisse comme un routeur. Donc j’ai testé la commande « curl » directement à partir du Firewall :
- 
+On vérifie d’abord que le Client a bien accès au serveur Web avant l’activation du pare-feu :
+	Client :
+ ![image](https://user-images.githubusercontent.com/56343178/172082040-d94d511e-cd58-49b1-b77d-4d5c2902659c.png)
+
+Pour tester le Pare-feu, on teste donc la règle définie précédemment dans le fichier fw.sh qui permet d’interdire l’accès au site au Client en activant le pare-feu puis en réessayant de faire un curl avec le Client. 
+Cependant, je n’ai pas réussi à appliquer cette règle sur le Client car je n’arrive pas à définir les deux  adresses IP du Firewall comme passerelle par défaut des containers Server et Client pour qu’il agisse comme un routeur. Donc j’ai testé la commande « curl » directement à partir du Firewall :
+ ![image](https://user-images.githubusercontent.com/56343178/172082079-75ca3a21-0977-414a-babe-b52a337ced83.png)
+
 On active maintenant le pare feu en exécutant le fichier fw.sh contenant la règle puis on refait un curl :
- 
+ ![image](https://user-images.githubusercontent.com/56343178/172082094-71e0b24f-8df0-4d22-829a-29cb80fac3f4.png)
+
 On voit bien que l’accès est maintenant bloqué.
 
 
