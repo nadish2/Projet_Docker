@@ -16,17 +16,6 @@ Ces trois conteneurs seront tous liés entre eux. En effet, pour qu’un client 
 -----------------
 ## Solution proposée
 
-Afin de réaliser ce projet, j’ai suivi les étapes suivantes :
-- I.	Création des 3 Dockerfile: Serveur Web / Client / Pare-feu
-- II.	Réglages réseau et adressage IP
-- III.	Test de la maquette
-- IV.	Docker Compose
-
-
-
-
-## I.	Création des 3 Dockerfile: Serveur Web / Client / Pare-feu
-
 - Dockerfile Server
 ```
 
@@ -41,64 +30,43 @@ Afin de réaliser ce projet, j’ai suivi les étapes suivantes :
 ```
 
 ```
+- Docker-Compose
+
+```
+
+```
+
+Afin de réaliser ce projet, j’ai suivi les étapes suivantes :
+- I.	Création des 3 Dockerfile: Serveur Web / Client / Pare-feu
+- II.	Réglages réseau et adressage IP
+- III.	Test de la maquette
+- IV.	Docker Compose
 
 
 
 
+## I.	Création des 3 Dockerfile: Serveur Web / Client / Pare-feu
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-I.	Création des 3 Dockerfile: Serveur Web / Client / Pare-feu
-
-J’ai commencé par créer et configurer séparément les Dockerfile de trois conteneurs, tous de type debian: un conteneur qui tournera un serveur Web (Apache2), deux conteneurs qui feront office de Client et enfin un dernier qui jouera le rôle de pare-feu et limitera donc la communication entre ces containers selon certaines conditions. 
+J’ai commencé par créer et configurer séparément les Dockerfile de trois conteneurs, tous de type debian: un conteneur qui tournera un serveur Web (Apache2), un conteneur qui fera office de Client et enfin un dernier qui jouera le rôle de pare-feu et limitera donc la communication entre ces containers selon certaines conditions. 
 
 On commence par faire « sudo apt-get update » dans notre machine virtuelle debian .
 Notre machine hôte a l’adresse IP suivante :
- 
+ ![image](https://user-images.githubusercontent.com/56343178/172078502-afa48370-9f29-4391-bd3a-04a7afe770d9.png)
 
 
-1.	Configuration Serveur Web (Apache2)
+
+### 1.	Configuration Serveur Web (Apache2)
 
 Pour le serveur Web , nous utiliserons le service Web Apache2. 
 On commence par créer notre répertoire « server » dans notre machine virtuelle Docker. Puis on y ajoute le Dockerfile suivant permettant d’afficher un premier site web, qui correspond ici à mon CV réalisé dans le module « Développement d’applications Web » de ce semestre et qui aura été importé à partir de mon github :
   
- 
- 
+ ![image](https://user-images.githubusercontent.com/56343178/172078559-53a0b4ac-fc20-4488-b3ef-47107ffcb314.png)
+
+ ![image](https://user-images.githubusercontent.com/56343178/172078565-d8851af9-2352-42e8-979e-7ae7c37523a9.png)
+
  
 
 On enregistre le fichier puis on lance la commande suivante : « docker build -t server . »
